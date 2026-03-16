@@ -35,6 +35,22 @@ class PineconeService:
         else:
             print("Pinecone index already exists")
 
+    def upsert_vectors(self, vectors):
 
-if __name__ == "__main__":
-    pinecone_service = PineconeService()
+        self.index.upsert(vectors)
+
+        print("Vectors inserted")
+
+    def query_vectors(self, vector, top_k=5):
+
+        results = self.index.query(
+            vector=vector,
+            top_k=top_k,
+            include_metadata=True
+        )
+
+        return results
+
+
+# if __name__ == "__main__":
+#     pinecone_service = PineconeService()

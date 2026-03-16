@@ -1,6 +1,9 @@
 import pandas as pd
 from fastapi import FastAPI
+from pydantic import BaseModel
 import os
+
+from services.rag_service import RetailRAGService
 
 app = FastAPI(title="Retail AI Demand Forecast API")
 
@@ -33,3 +36,18 @@ def get_product_forecast(stock_code: str):
         return {"message": "Product not found"}
 
     return product_data.to_dict(orient="records")
+
+ai = RetailRAGService()
+
+class Query(BaseModel):
+    question: str
+
+@app.post("/ask")
+def ask_ai(query: Query):
+
+    answer = ai.ask(query.question)
+
+    return {
+        "question": query.question,
+        "answer": answer
+    }
